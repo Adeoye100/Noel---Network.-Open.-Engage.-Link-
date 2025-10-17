@@ -1,0 +1,12 @@
+packages:
+  - 'p2p-chat-app'
+  - 'shared-components'
+  - 'utils'
+  - 'api-server'
+  - 'mobile-client'
+  - 'web-client'
+  - 'docs'
+  - 'tests'
+  - 'dev-scripts'
+  - 'infrastructure'
+  - 'design-system' 
