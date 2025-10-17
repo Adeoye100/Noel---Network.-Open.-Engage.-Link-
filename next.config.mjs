@@ -5,7 +5,7 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
     output: 'export',
-   basePath: '/p2p-chat-app',
+   basePath: '/Noel-Network-Open-Engage-Link-',
   images: {
     unoptimized: true,
   },
