@@ -110,7 +110,10 @@ export class WebRTCService {
       console.error("[v0] Cannot send signal: Realtime Database not available")
       return
     }
+    // Send the signal to the peer's signaling path, under our own user ID.
+    // This allows the peer to listen on `signals/{peerId}/{myId}`.
     const signalPath = `signals/${this.peerId}/${this.userId}/${Date.now()}`
+
     set(ref(rtdb, signalPath), signal).catch((error) => {
       if (error.code === "PERMISSION_DENIED") {
         console.error(
@@ -128,6 +131,8 @@ export class WebRTCService {
       return
     }
 
+    // Listen for signals sent to us from our peer.
+    // The path is `signals/{myId}/{peerId}`.
     this.signalRef = ref(rtdb, `signals/${this.userId}/${this.peerId}`)
 
     onValue(
@@ -159,19 +164,31 @@ export class WebRTCService {
             }
 
             // Remove processed signal
-            remove(ref(rtdb, `signals/${this.userId}/${this.peerId}/${key}`))
+            try {
+              // Remove processed signal
+              if (!rtdb) {
+                console.warn("[v0] Realtime DB not configured; skipping signal removal.")
+              } else {
+                await remove(ref(rtdb, `signals/${this.userId}/${this.peerId}/${key}`))
+              }
+            } catch (error) {
+              console.error("[v0] Error processing signal:", error)
+            }
           } catch (error) {
             console.error("[v0] Error processing signal:", error)
           }
         }
       },
       (error) => {
-        if (error.code === "PERMISSION_DENIED") {
+        // The default 'Error' type doesn't have a 'code' property.
+        // We cast to 'any' to safely check for the Firebase-specific error code.
+        const errAny = error as any;
+        if (errAny?.code === "PERMISSION_DENIED") {
           console.error(
             "[v0] Permission denied when listening for signals. Please update Firebase Realtime Database rules.",
-          )
+          );
         } else {
-          console.error("[v0] Error listening for signals:", error)
+          console.error("[v0] Error listening for signals:", error);
         }
       },
     )

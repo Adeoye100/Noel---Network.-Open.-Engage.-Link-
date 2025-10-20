@@ -124,7 +124,10 @@ export class PresenceService {
         }
       },
       (error) => {
-        if (error.code === "PERMISSION_DENIED") {
+        // Some Error objects don't have a `code` property in TS's Error type.
+        // Narrow safely before accessing it.
+        const errAny = error as any
+        if (errAny && typeof errAny.code === "string" && errAny.code === "PERMISSION_DENIED") {
           console.error("[v0] Permission denied when subscribing to presence.")
         } else {
           console.error("[v0] Error subscribing to presence:", error)

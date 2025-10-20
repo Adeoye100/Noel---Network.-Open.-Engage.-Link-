@@ -5,10 +5,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
-import type { UserKeys } from "@/lib/messaging"
+import type { Contact as BaseContact } from "@/lib/contacts"
 import { PresenceService, type PresenceStatus } from "@/lib/presence"
 
-interface Contact extends UserKeys {
+interface Contact extends BaseContact {
   lastMessage?: string
   lastMessageTime?: number
   unreadCount?: number

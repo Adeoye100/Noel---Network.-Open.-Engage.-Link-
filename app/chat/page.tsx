@@ -63,7 +63,7 @@ export default function ChatPage() {
   }, [user, publicKey, keysLoading])
 
   useEffect(() => {
-    if (!user || !selectedContact) return
+    if (!user || !selectedContact || !privateKey) return
 
     const unsubscribe = MessagingService.subscribeToMessages(user.uid, selectedContact.userId, privateKey, (msgs) => {
       setMessages(msgs)

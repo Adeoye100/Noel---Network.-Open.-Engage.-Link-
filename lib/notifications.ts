@@ -8,6 +8,7 @@ import {
   onSnapshot,
   updateDoc,
   doc,
+  getDocs, // Make sure this is imported
   type Unsubscribe,
 } from "firebase/firestore"
 import { db } from "./firebase"
@@ -105,7 +106,9 @@ export class NotificationService {
   static async markAllAsRead(userId: string): Promise<void> {
     const q = query(collection(db, "notifications"), where("userId", "==", userId), where("read", "==", false))
 
-    const snapshot = await q.get()
+    // Use getDocs instead of snapshot.get()
+    const snapshot = await getDocs(q)
+
     const promises = snapshot.docs.map((doc) => updateDoc(doc.ref, { read: true }))
     await Promise.all(promises)
   }
