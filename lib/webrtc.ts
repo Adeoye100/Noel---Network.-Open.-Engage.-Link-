@@ -110,8 +110,7 @@ export class WebRTCService {
       console.error("[v0] Cannot send signal: Realtime Database not available")
       return
     }
-    // Send the signal to the peer's signaling path, under our own user ID.
-    // This allows the peer to listen on `signals/{peerId}/{myId}`.
+    
     const signalPath = `signals/${this.peerId}/${this.userId}/${Date.now()}`
 
     set(ref(rtdb, signalPath), signal).catch((error) => {
